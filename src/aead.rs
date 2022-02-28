@@ -667,12 +667,12 @@ enum Direction {
 mod aes;
 mod aes_gcm;
 mod block;
-mod chacha;
+pub(crate) mod chacha;
 mod chacha20_poly1305;
 pub mod chacha20_poly1305_openssh;
 mod counter;
 mod gcm;
-mod iv;
+pub(crate) mod iv;
 mod nonce;
 mod poly1305;
 pub mod quic;

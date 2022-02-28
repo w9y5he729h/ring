@@ -133,3 +133,6 @@ mod sealed {
     // ```
     pub trait Sealed {}
 }
+
+#[cfg(target_arch = "riscv64")]
+mod riscv64;

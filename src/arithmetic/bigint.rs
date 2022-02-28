@@ -1184,7 +1184,7 @@ fn greater_than(a: &Nonnegative, b: &Nonnegative) -> bool {
 
 #[derive(Clone)]
 #[repr(transparent)]
-struct N0([Limb; 2]);
+pub struct N0([Limb; 2]);
 
 const N0_LIMBS_USED: usize = 64 / LIMB_BITS;
 
