@@ -36,19 +36,18 @@ const ARM: &str = "arm";
 
 #[rustfmt::skip]
 const RING_SRCS: &[(&[&str], &str)] = &[
+    (&[], "crypto/crypto.c"),
     (&[], "crypto/curve25519/curve25519.c"),
     (&[], "crypto/fipsmodule/aes/aes_nohw.c"),
     (&[], "crypto/fipsmodule/bn/montgomery.c"),
     (&[], "crypto/fipsmodule/bn/montgomery_inv.c"),
+    (&[], "crypto/fipsmodule/ec/ecp_nistz256.c"),
+    (&[], "crypto/fipsmodule/ec/ecp_nistz.c"),
+    (&[], "crypto/fipsmodule/ec/gfp_p256.c"),
+    (&[], "crypto/fipsmodule/ec/gfp_p384.c"),
     (&[], "crypto/limbs/limbs.c"),
     (&[], "crypto/mem.c"),
     (&[], "crypto/poly1305/poly1305.c"),
-
-    (&[AARCH64, ARM, X86_64, X86], "crypto/crypto.c"),
-    (&[AARCH64, ARM, X86_64, X86], "crypto/fipsmodule/ec/ecp_nistz.c"),
-    (&[AARCH64, ARM, X86_64, X86], "crypto/fipsmodule/ec/ecp_nistz256.c"),
-    (&[AARCH64, ARM, X86_64, X86], "crypto/fipsmodule/ec/gfp_p256.c"),
-    (&[AARCH64, ARM, X86_64, X86], "crypto/fipsmodule/ec/gfp_p384.c"),
 
     (&[X86_64, X86], "crypto/cpu-intel.c"),
 
