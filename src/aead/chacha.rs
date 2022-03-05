@@ -92,6 +92,7 @@ impl Key {
     }
 
     #[inline] // Optimize away match on `counter.`
+    #[cfg(not(target_arch = "riscv64"))]
     unsafe fn encrypt(
         &self,
         counter: CounterOrIv,
@@ -120,6 +121,49 @@ impl Key {
         }
 
         GFp_ChaCha20_ctr32(output, input, in_out_len, self, &iv);
+    }
+
+    #[cfg(target_arch = "riscv64")]
+    #[inline]
+    unsafe fn encrypt(
+        &self,
+        counter: CounterOrIv,
+        input: *const u8,
+        in_out_len: usize,
+        output: *mut u8,
+    ) {
+        use alloc::vec;
+        use chacha20::{
+            cipher::{KeyIvInit, StreamCipher, StreamCipherSeek},
+            ChaCha20,
+        };
+        use core::{convert::TryInto, slice};
+
+        let key = self.0.as_byte_array();
+
+        let iv = match counter {
+            CounterOrIv::Counter(counter) => counter.into(),
+            CounterOrIv::Iv(iv) => {
+                assert!(in_out_len <= 32);
+                iv
+            }
+        };
+        let iv_bytes = iv.into_bytes_less_safe();
+
+        let nonce: [u8; 12] = iv_bytes[4..].try_into().expect("nonce size is incorrect");
+
+        let mut cipher = ChaCha20::new(&(*key).into(), &nonce.into());
+
+        let counter = u32::from_le_bytes(iv_bytes[0..4].try_into().expect("invalid counter size"));
+
+        cipher.seek(counter);
+
+        let mut buffer = vec![0u8; in_out_len];
+        buffer.copy_from_slice(slice::from_raw_parts(input, in_out_len));
+
+        cipher.apply_keystream(&mut buffer);
+
+        slice::from_raw_parts_mut(output, in_out_len).copy_from_slice(&buffer);
     }
 
     #[cfg(target_arch = "x86_64")]

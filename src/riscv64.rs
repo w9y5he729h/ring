@@ -6,17 +6,6 @@ use crate::{
 };
 
 #[no_mangle]
-pub extern "C" fn GFp_ChaCha20_ctr32(
-    out: *mut u8,
-    in_: *const u8,
-    in_len: c::size_t,
-    key: &Key,
-    first_iv: &Iv,
-) {
-    todo!();
-}
-
-#[no_mangle]
 pub extern "C" fn GFp_bn_mul_mont(
     r: *mut Limb,
     a: *const Limb,
